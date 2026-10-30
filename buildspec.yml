@@ -1,0 +1,42 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: ap-south-1
+    SAM_STACK_NAME: expense-tracker-poc-stack-1
+
+phases:
+  install:
+    commands:
+      - echo "===== INSTALL STAGE ====="
+      - node --version
+      - npm --version
+      - aws --version
+      - sam --version
+
+  pre_build:
+    commands:
+      - echo "===== PRE-BUILD STAGE ====="
+      - npm ci --prefix src
+
+  build:
+    commands:
+      - echo "===== BUILD STAGE ====="
+      - sam validate --lint --template-file template.yaml
+      - sam build --template-file template.yaml
+
+  post_build:
+    commands:
+      - echo "===== POST-BUILD STAGE ====="
+      - >
+        sam deploy
+        --template-file .aws-sam/build/template.yaml
+        --stack-name "$SAM_STACK_NAME"
+        --region "$AWS_REGION"
+        --capabilities CAPABILITY_IAM
+        --resolve-s3
+        --no-confirm-changeset 
+        --no-fail-on-empty-changeset
+        # --no-execute-changeset
+
+      - echo "===== DEPLOYMENT COMPLETED ====="

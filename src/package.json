@@ -1,0 +1,11 @@
+
+{
+  "name": "expense-tracker-lambda-poc",
+  "version": "1.0.0",
+  "description": "POC for managing an existing AWS Lambda using SAM and CodePipeline",
+  "type": "module",
+  "main": "src/index.mjs",
+  "scripts": {
+    "build": "echo 'Building Expense Tracker Lambda'"
+  }
+}

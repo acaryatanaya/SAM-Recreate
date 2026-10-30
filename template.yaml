@@ -1,0 +1,49 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Expense Tracker POC - Recreate Lambda using SAM
+
+Resources:
+
+  ExpenseTrackerLambda:
+    Type: AWS::Serverless::Function
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+
+    Properties:
+      FunctionName: expense-tracker-poc-lambda-1
+
+      Runtime: nodejs22.x
+      Handler: index.handler
+      CodeUri: src/
+
+      PackageType: Zip
+      MemorySize: 128
+      Timeout: 3
+      Architectures:
+        - x86_64
+
+      Role: arn:aws:iam::964222105287:role/lambda-execution-role
+
+      VpcConfig:
+        SubnetIds:
+          - subnet-0c8d0a85cfc5ea54e
+          - subnet-07b86a9004f5845f8
+        SecurityGroupIds:
+          - sg-09d14e1b090db41fc
+        Ipv6AllowedForDualStack: false
+
+      LoggingConfig:
+        LogFormat: Text
+        LogGroup: /aws/lambda/expense-tracker-poc-lambda-1
+
+      Tracing: PassThrough
+
+      EphemeralStorage:
+        Size: 512
+
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+
+      RecursiveLoop: Terminate
